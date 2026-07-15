@@ -1,0 +1,29 @@
+BUILDFLOW PROFESSIONAL FOLDER GUIDE
+
+CLIENT
+api/ - Axios instance and API request functions.
+assets/ - Images, icons, fonts.
+components/common/ - Reusable components (Button, Loader, Modal).
+components/layout/ - Navbar, Sidebar, Footer.
+components/ui/ - UI widgets/cards.
+context/ - React Context (Auth, Theme).
+hooks/ - Custom React hooks.
+pages/ - Individual application screens.
+routes/ - Route definitions and protected routes.
+services/ - Frontend business logic if needed.
+utils/ - Helper functions.
+styles/ - Global CSS/theme.
+
+SERVER
+config/ - Database and third-party configuration.
+controllers/ - Receive requests and send responses.
+middleware/ - Auth, admin checks, error handling.
+models/ - Mongoose schemas.
+routes/ - Express API endpoints.
+services/ - Business logic (estimation, auth, orders).
+utils/ - Utility/helper functions.
+validations/ - Request validation schemas.
+
+ROOT
+README.md - Project documentation.
+.gitignore - Files ignored by Git.

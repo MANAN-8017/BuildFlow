@@ -1,0 +1,26 @@
+{
+  "name": "buildflow",
+  "version": "1.0.0",
+  "description": "BuildFlow is a MERN stack web application designed to simplify construction material estimation and procurement. It automates material quantity calculations based on construction dimensions and provides an integrated marketplace for purchasing materials and tracking orders.",
+  "main": "index.js",
+  "scripts": {
+    "client": "npm run dev --prefix client",
+    "server": "npm run dev --prefix server",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MANAN-8017/BuildFlow.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MANAN-8017/BuildFlow/issues"
+  },
+  "homepage": "https://github.com/MANAN-8017/BuildFlow#readme",
+  "devDependencies": {
+    "concurrently": "^10.0.3"
+  }
+}
