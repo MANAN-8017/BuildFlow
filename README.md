@@ -43,18 +43,77 @@ BuildFlow is a MERN stack web application designed to simplify construction mate
 
 ```
 BuildFlow/
+│
 ├── client/
+│   ├── public/
+│   ├── src/
+│   │
+│   ├── api/
+│   ├── assets/
+│   ├── components/
+│   │   ├── common/
+│   │   ├── layout/
+│   │   └── ui/
+│   │
+│   ├── context/
+│   ├── hooks/
+│   ├── pages/
+│   │   ├── Home/
+│   │   ├── Login/
+│   │   ├── Register/
+│   │   ├── Dashboard/
+│   │   ├── Products/
+│   │   ├── Cart/
+│   │   ├── Orders/
+│   │   └── Admin/
+│   │
+│   ├── routes/
+│   ├── services/
+│   ├── utils/
+│   ├── styles/
+│   ├── App.jsx
+│   └── main.jsx
+│
 ├── server/
+│
+│   ├── config/
+│   │   ├── db.js
+│   │   └── cloudinary.js
+│   │
+│   ├── controllers/
+│   │
+│   ├── middleware/
+│   │   ├── authMiddleware.js
+│   │   ├── adminMiddleware.js
+│   │   └── errorHandler.js
+│   │
+│   ├── models/
+│   │
+│   ├── routes/
+│   │
+│   ├── services/
+│   │
+│   ├── utils/
+│   │
+│   ├── validations/
+│   │
+│   ├── app.js
+│   ├── server.js
+│   └── .env
+│
+├── .gitignore
 ├── README.md
-└── .gitignore
+├── Folder_Guide.txt
+├── package-lock.json
+└── package.json
 ```
 
 ---
 
 ## Team Members
 
-- Your Name
-- Project Partner's Name
+- Manan Patel
+- Samarth Patel
 
 ---
 
