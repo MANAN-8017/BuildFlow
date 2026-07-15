@@ -51,6 +51,59 @@ BuildFlow/
 
 ---
 
+## Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/MANAN-8017/BuildFlow.git
+cd BuildFlow
+```
+
+### 2. Install root dependencies
+
+```bash
+npm install
+```
+
+### 3. Install frontend dependencies
+
+```bash
+cd client
+npm install
+```
+
+### 4. Install backend dependencies
+
+```bash
+cd ../server
+npm install
+```
+
+## Environment Variables
+
+Create a `.env` file inside the `server` folder.
+
+Example:
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+CLIENT_URL=http://localhost:5173
+```
+
+## Run the project
+
+From the project root:
+
+```bash
+npm run dev
+```
+
+- Frontend: http://localhost:5173
+- Backend: http://localhost:5000
+
 ## Team Members
 
 - Your Name
