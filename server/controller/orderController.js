@@ -105,11 +105,4 @@ const deleteOrder = async (req, res) => {
     }
 };
 
-module.exports = {
-    createOrder,
-    getOrders,
-    getOrderById,
-    getOrdersByUserId,
-    updateOrder,
-    deleteOrder
-};
+module.exports = { createOrder, getOrders, getOrderById, getOrdersByUserId, updateOrder, deleteOrder };

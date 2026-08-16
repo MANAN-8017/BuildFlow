@@ -91,10 +91,4 @@ const deleteEstimation = async (req, res) => {
     }
 };
 
-module.exports = {
-    createEstimation,
-    getEstimations,
-    getEstimationById,
-    updateEstimation,
-    deleteEstimation
-};
+module.exports = { createEstimation, getEstimations, getEstimationById, updateEstimation, deleteEstimation };

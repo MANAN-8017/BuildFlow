@@ -1,19 +1,13 @@
 const express = require("express");
 
-const {
-    createEstimation,
-    getEstimations,
-    getEstimationById,
-    updateEstimation,
-    deleteEstimation
-} = require("../controller/estimationController");
+const { createEstimation, getEstimations, getEstimationById, updateEstimation, deleteEstimation } = require("../controller/estimationController");
 
-const router = express.Router();
+const estimationRouter = express.Router();
 
-router.post("/", createEstimation);
-router.get("/", getEstimations);
-router.get("/:estimationId", getEstimationById);
-router.put("/:estimationId", updateEstimation);
-router.delete("/:estimationId", deleteEstimation);
+estimationRouter.post("/create", createEstimation);
+estimationRouter.get("/", getEstimations);
+estimationRouter.get("/:estimationId", getEstimationById);
+estimationRouter.put("/:estimationId", updateEstimation);
+estimationRouter.delete("/:estimationId", deleteEstimation);
 
-module.exports = router;
+module.exports = estimationRouter;

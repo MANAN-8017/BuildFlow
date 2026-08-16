@@ -105,11 +105,4 @@ const deletePayment = async (req, res) => {
     }
 };
 
-module.exports = {
-    createPayment,
-    getPayments,
-    getPaymentById,
-    getPaymentsByUserId,
-    updatePayment,
-    deletePayment
-};
+module.exports = { createPayment, getPayments, getPaymentById, getPaymentsByUserId, updatePayment, deletePayment };

@@ -111,11 +111,4 @@ const deleteCart = async (req, res) => {
     }
 };
 
-module.exports = {
-    createCart,
-    getCarts,
-    getCartById,
-    getCartByUserId,
-    updateCart,
-    deleteCart
-};
+module.exports = { createCart, getCarts, getCartById, getCartByUserId, updateCart, deleteCart };
