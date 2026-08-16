@@ -3,27 +3,31 @@ BUILDFLOW PROFESSIONAL FOLDER GUIDE
 CLIENT
 api/ - Axios instance and API request functions.
 assets/ - Images, icons, fonts.
-components/common/ - Reusable components (Button, Loader, Modal).
+components/common/ - Reusable components such as Button, Loader, Modal.
 components/layout/ - Navbar, Sidebar, Footer.
-components/ui/ - UI widgets/cards.
-context/ - React Context (Auth, Theme).
+components/ui/ - UI widgets and cards.
+context/ - React Context such as Auth and Theme.
 hooks/ - Custom React hooks.
 pages/ - Individual application screens.
 routes/ - Route definitions and protected routes.
 services/ - Frontend business logic if needed.
 utils/ - Helper functions.
-styles/ - Global CSS/theme.
+styles/ - Global CSS and theme styles.
+
 
 SERVER
 config/ - Database and third-party configuration.
-controllers/ - Receive requests and send responses.
-middleware/ - Auth, admin checks, error handling.
-models/ - Mongoose schemas.
-routes/ - Express API endpoints.
-services/ - Business logic (estimation, auth, orders).
-utils/ - Utility/helper functions.
+controller/ - Receive requests, process controller logic, and send responses.
+middleware/ - Authentication, authorization, admin checks, error handling.
+model/ - Mongoose schemas and MongoDB models.
+routes/ - Express API route definitions.
+services/ - Business logic such as estimation, authentication, orders.
+utils/ - Utility and helper functions.
 validations/ - Request validation schemas.
+
 
 ROOT
 README.md - Project documentation.
-.gitignore - Files ignored by Git.
+.gitignore - Files and folders ignored by Git.
+package.json - Root project configuration and npm scripts.
+postman/ - Postman collections and API testing configuration.
