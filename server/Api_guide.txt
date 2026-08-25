@@ -1,0 +1,26 @@
+url: {{baseUrl}}/api/payments/create
+
+Request: 
+{
+    "amount": 1500,
+    "currency": "INR",
+    "receipt": "buildflow_test_002",
+    "userId": 1,
+    "paymentMode": "UPI"
+}
+
+Response: 
+{
+    "userId": 1,
+    "razorpayPaymentId": null,
+    "razorpayOrderId": "order_TTtMmMadOvTtBz",
+    "amount": 1500,
+    "paymentMode": "UPI",
+    "receipt": "buildflow_test_002",
+    "currency": "INR",
+    "status": "created",
+    "_id": "6a8d2c139a21ef2f8e7d8a24",
+    "createdAt": "2026-08-25T05:45:55.685Z",
+    "updatedAt": "2026-08-25T05:45:55.685Z",
+    "__v": 0
+}

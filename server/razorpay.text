@@ -1,0 +1,203 @@
+1. For creating an Order
+
+Endpoint
+POST https://api.razorpay.com/v1/orders
+
+Request body
+{
+  "amount": 50000,
+  "currency": "INR",
+  "receipt": "receipt_001",
+  "notes": {
+    "key1": "value1",
+    "key2": "value2"
+  }
+}
+
+Response body
+{
+  "id": "order_RB58MiP5SPFYyM",
+  "entity": "order",
+  "amount": 50000,
+  "amount_paid": 0,
+  "amount_due": 50000,
+  "currency": "INR",
+  "receipt": "receipt_001",
+  "status": "created",
+  "attempts": 0,
+  "notes": {
+    "key1": "value1",
+    "key2": "value2"
+  },
+  "created_at": 1756455561
+}
+
+The important value for your application is:
+
+"id": "order_RB58MiP5SPFYyM"
+
+You pass that order_id to Razorpay Checkout.
+
+2. Fetch an Order
+
+GET https://api.razorpay.com/v1/orders/{order_id}
+
+GET https://api.razorpay.com/v1/orders/order_RB58MiP5SPFYyM
+
+Response body
+{
+  "id": "order_RB58MiP5SPFYyM",
+  "entity": "order",
+  "amount": 50000,
+  "amount_paid": 50000,
+  "amount_due": 0,
+  "currency": "INR",
+  "status": "paid"
+}
+
+3. Get payments belonging to an Order
+
+GET https://api.razorpay.com/v1/orders/{order_id}/payments
+
+GET https://api.razorpay.com/v1/orders/order_RB58MiP5SPFYyM/payments
+
+
+Response:
+
+{
+  "entity": "collection",
+  "count": 1,
+  "items": [
+    {
+      "id": "pay_KbCaQOgY6QclC7",
+      "entity": "payment",
+      "amount": 50000,
+      "currency": "INR",
+      "status": "captured",
+      "order_id": "order_RB58MiP5SPFYyM",
+      "method": "upi",
+      "captured": true
+    }
+  ]
+}
+
+4. Get a specific Payment
+
+Suppose Checkout gives you:
+
+pay_KbCaQOgY6QclC7
+
+You can fetch it:
+
+GET https://api.razorpay.com/v1/payments/{payment_id}
+
+GET https://api.razorpay.com/v1/payments/pay_KbCaQOgY6QclC7
+
+Response contains things like:
+
+{
+  "id": "pay_KbCaQOgY6QclC7",
+  "entity": "payment",
+  "amount": 50000,
+  "currency": "INR",
+  "status": "captured",
+  "order_id": "order_RB58MiP5SPFYyM",
+  "method": "upi",
+  "captured": true
+}
+
+5. Capture a Payment
+
+If you have an authorized payment:
+
+POST https://api.razorpay.com/v1/payments/{payment_id}/capture
+
+POST https://api.razorpay.com/v1/payments/pay_KbCaQOgY6QclC7/capture
+
+The request requires the appropriate capture parameters documented by Razorpay.
+
+{
+  "amount": 1000,
+  "currency": "INR"
+}
+
+6. The important Razorpay flow
+
+Your React Frontend
+        │
+        │ Request payment
+        ▼
+Your Node/.NET Backend
+        │
+        │ POST /v1/orders
+        ▼
+Razorpay API
+        │
+        │ { order_id }
+        ▼
+Your Backend
+        │
+        │ Send order_id to frontend
+        ▼
+Razorpay Checkout
+        │
+        │ User pays
+        ▼
+Razorpay
+        │
+        │ payment_id
+        │ order_id
+        │ signature
+        ▼
+Your Backend
+        │
+        │ Verify signature
+        ▼
+Database
+
+Razorpay specifically recommends creating an Order before initiating Checkout, and the resulting order_id should be passed to Checkout.
+
+Where to find this information yourself
+
+Use the official API reference:
+
+Razorpay API Reference
+
+Then select:
+
+API Reference
+ ├── Orders
+ │    ├── Create an Order
+ │    ├── Fetch All Orders
+ │    ├── Fetch Order With ID
+ │    └── Fetch All Payments for an Order
+ │
+ └── Payments
+      ├── Capture a Payment
+      ├── Fetch a Payment
+      ├── Fetch All Payments
+      └── Fetch Payments Based on Orders
+
+Razorpay also provides a Postman Public Workspace, which is very useful because you can directly test these endpoints with your Test API Keys.
+
+For your project, the most important thing is:
+
+If you're implementing Razorpay in BuildFlow, don't try to make your frontend call every Razorpay API directly.
+
+Your backend should generally handle:
+
+POST /api/payments/create-order
+             ↓
+https://api.razorpay.com/v1/orders
+             ↓
+return order_id
+
+and then:
+
+POST /api/payments/verify
+             ↓
+verify razorpay_order_id
+verify razorpay_payment_id
+verify razorpay_signature
+             ↓
+mark BuildFlow order as PAID

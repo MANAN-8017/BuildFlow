@@ -13,8 +13,8 @@ function Home() {
         <h2>MERN Stack Project</h2>
 
         <p>
-          Automating construction material estimation, procurement,
-          and order management.
+          Automating construction material estimation,
+          procurement, and order management.
         </p>
 
         <div className="tech">
