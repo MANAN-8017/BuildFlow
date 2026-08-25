@@ -1,8 +1,9 @@
 const Estimation = require("../model/estimation");
+const estimationService = require("../services/estimationService");
 
 const createEstimation = async (req, res) => {
     try {
-        const estimation = await Estimation.create(req.body);
+        const estimation = await estimationService.create(req.body);
         res.status(201).json(estimation);
     } catch (error) {
         res.status(500).json({

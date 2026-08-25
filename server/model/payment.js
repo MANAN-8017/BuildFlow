@@ -8,7 +8,17 @@ const payment = new Schema(
             required: true
         },
 
-        totalAmount: {
+        razorpayPaymentId:{
+            type: String,
+            default: null
+        },
+
+        razorpayOrderId:{
+            type: String,
+            default: null
+        },
+
+        amount: {
             type: Number,
             required: true,
             min: 0
@@ -20,15 +30,26 @@ const payment = new Schema(
             required: true
         },
 
+        receipt: {
+            type: String,
+            default: null
+        },
+
+        currency: {
+            type: String,
+            default: "INR"
+        },
+
         status: {
             type: String,
             enum: [
-                "Pending",
-                "Success",
-                "Failed",
-                "Refunded"
+                "created",
+                "authorized",
+                "captured",
+                "refunded",
+                "failed",
             ],
-            default: "Pending"
+            default: "pending"
         }
     },
     {

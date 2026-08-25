@@ -8,6 +8,12 @@ const order = new Schema(
             required: true
         },
 
+        orderId:{
+            type: String,
+            required: true,
+            unique: true
+        },
+
         products: [
             {
                 productId: {

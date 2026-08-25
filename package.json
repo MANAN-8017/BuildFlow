@@ -25,6 +25,8 @@
   },
   "dependencies": {
     "client": "^0.0.1",
-    "mongoose": "^9.9.2"
+    "mongoose": "^9.9.2",
+    "nodemon": "^3.1.14",
+    "razorpay": "^2.9.8"
   }
 }

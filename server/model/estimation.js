@@ -8,6 +8,12 @@ const estimation = new Schema(
             required: true
         },
 
+        estimationId:{
+            type: String,
+            required: true,
+            unique: true
+        },
+
         length: {
             type: Number,
             required: true,
