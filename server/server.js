@@ -6,9 +6,11 @@ const app = require("./app");
 const PORT = process.env.PORT;
 
 try {
-    app.listen(PORT, () => {
-        console.log(`Server is running on http://localhost:${PORT}`);
+    app.get("/", (req, res) => {
+    res.json({
+        message: "BuildFlow API is running"
     });
+});
 }
 catch (error) {
     console.error("Error starting the server:", error);
