@@ -1,5 +1,6 @@
 const Payment = require("../model/payment");
 const paymentService = require("../services/paymentService");
+const { createOrder } = require("./orderController");
 
 const createPayment = async (req, res) => {
     try {
@@ -14,6 +15,8 @@ const createPayment = async (req, res) => {
             userId: req.body.userId,
             paymentMode: req.body.paymentMode,
         });
+
+        createOrder(payment, res);
 
         res.status(201).json(payment);
     } catch (error) {

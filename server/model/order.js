@@ -44,12 +44,12 @@ const order = new Schema(
         status: {
             type: String,
             enum: [
-                "Processing",
-                "Shipped",
-                "Delivered",
-                "Cancelled"
+                "processing",
+                "shipped",
+                "delivered",
+                "cancelled"
             ],
-            default: "Processing"
+            default: "processing"
         }
     },
     {

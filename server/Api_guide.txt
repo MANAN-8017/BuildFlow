@@ -1,3 +1,5 @@
+Razopay Page URL: "BuildFlow" https://rzp.io/rzp/Y207QrA
+
 url: {{baseUrl}}/api/payments/create
 
 Request: 
@@ -24,3 +26,28 @@ Response:
     "updatedAt": "2026-08-25T05:45:55.685Z",
     "__v": 0
 }
+
+
+1. Create Razorpay Order
+        ↓
+   order_xxxxx
+        ↓
+2. Open Razorpay Checkout
+        ↓
+3. Customer pays
+        ↓
+4. Razorpay generates
+   payment_id
+        ↓
+   pay_xxxxx
+        ↓
+5. Frontend receives:
+   payment_id
+   order_id
+   signature
+        ↓
+6. Send these to your backend
+        ↓
+7. Backend verifies signature
+        ↓
+8. Update MongoDB payment record

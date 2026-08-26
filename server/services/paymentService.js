@@ -23,7 +23,7 @@ const create = async (paymentData) => {
 const verify = (razorpay_order_id, razorpay_payment_id, razorpay_signature) => {
     const crypto = require("crypto");
     const generated_signature = crypto
-        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+        .createHmac("sha256", process.erazorpay_signaturenv.RAZORPAY_KEY_SECRET)
         .update(razorpay_order_id + "|" + razorpay_payment_id)
         .digest("hex");
 
