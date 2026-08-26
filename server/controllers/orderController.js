@@ -1,23 +1,41 @@
 const Order = require("../models/order");
-const generateOrderId = require("../services/orderIdService");
+const { generateOrderId } = require("../services/idService");
 const paymentService = require("../services/paymentService");
 
 const createOrder = async (req, res) => {
     try {
-
         const orderId = await generateOrderId();
 
-        const order = await Order.create({
+        const razorpayOrder = await paymentService.create({
+            amount: req.body.totalAmount,
+            currency: req.body.currency,
+            reciept: orderId
+        });
+
+        var order = await Order.create({
             orderId,
+            razorpayOrderId: razorpayOrder.razorpayOrderId,
             userId: req.body.userId,
             products: req.body.products,
             shippingAddress: req.body.shippingAddress,
             subtotal: req.body.subtotal,
             deliveryCharge: req.body.deliveryCharge,
-            totalAmount: req.body.totalAmount
+            totalAmount: req.body.totalAmount,
+            paymentStatus: razorpayOrder.status,
+            orderStatus: "pending"
         });
 
-        const razorpayOrder = await paymentService.create(req.body);
+        order = await Order.findOneAndUpdate(
+            { orderId },
+            {
+                razorpayOrderId: razorpayOrder.id,
+                paymentStatus: "created"
+            },
+            {
+                returnDocument: "after",
+                runValidators: true
+            }
+        );
 
         res.status(201).json({
             success: true,

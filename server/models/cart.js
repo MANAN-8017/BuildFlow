@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 const cart = new Schema(
     {
         userId: {
-            type: Number,
+            type: String,
             required: true,
             unique: true
         },
@@ -18,7 +18,7 @@ const cart = new Schema(
         products: [
             {
                 productId: {
-                    type: Number,
+                    type: String,
                     required: true
                 },
 

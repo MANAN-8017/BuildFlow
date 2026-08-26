@@ -1,8 +1,20 @@
 const User = require("../models/user");
+const { generateUserId } = require("../services/idService");
 
 const createUser = async (req, res) => {
     try {
-        const user = await User.create(req.body);
+
+        const userId = await generateUserId();
+
+        const user = await User.create({
+            userId,
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            password: req.body.password,
+            address: req.body.address
+        });
+
         res.status(201).json(user);
     } catch (error) {
         res.status(500).json({

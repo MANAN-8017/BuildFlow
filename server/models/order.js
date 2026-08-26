@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 const order = new Schema(
     {
         userId: {
-            type: Number,
+            type: String,
             required: true
         },
 
@@ -18,7 +18,7 @@ const order = new Schema(
         products: [
             {
                 productId: {
-                    type: Number,
+                    type: String,
                     required: true
                 },
 
@@ -90,6 +90,12 @@ const order = new Schema(
             type: Number,
             required: true,
             min: 0
+        },
+
+        currency: {
+            type: String,
+            default: "INR",
+            uppercase: true
         },
 
         paymentMode: {

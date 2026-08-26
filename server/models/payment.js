@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 const payment = new Schema(
     {
         userId: {
-            type: Number,
+            type: String,
             required: true
         },
 
