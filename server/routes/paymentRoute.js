@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { createPayment, verifyPayment, getPayments, getPaymentById, getPaymentsByUserId, updatePayment, deletePayment } = require("../controller/paymentController");
+const { createPayment, verifyPayment, getPayments, getPaymentById, getPaymentsByUserId, updatePayment, deletePayment } = require("../controllers/paymentController");
 
 const paymentRouter = express.Router();
 

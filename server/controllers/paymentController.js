@@ -1,11 +1,9 @@
-const Payment = require("../model/payment");
+const Payment = require("../models/payment");
 const paymentService = require("../services/paymentService");
 const { createOrder } = require("./orderController");
 
 const createPayment = async (req, res) => {
     try {
-        const order = await paymentService.create(req.body);
-
         const payment = await Payment.create({
             razorpayOrderId: order.id,
             amount: order.amount / 100,

@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { createEstimation, getEstimations, getEstimationById, updateEstimation, deleteEstimation } = require("../controller/estimationController");
+const { createEstimation, getEstimations, getEstimationById, updateEstimation, deleteEstimation } = require("../controllers/estimationController");
 
 const estimationRouter = express.Router();
 

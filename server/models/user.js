@@ -22,7 +22,7 @@ const user = new Schema(
             trim: true
         },
 
-        phNo: {
+        phone: {
             type: String
         },
 

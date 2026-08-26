@@ -1,4 +1,4 @@
-const Estimation = require("../model/estimation");
+const Estimation = require("../models/estimation");
 const estimationService = require("../services/estimationService");
 
 const createEstimation = async (req, res) => {

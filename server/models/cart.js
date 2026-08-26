@@ -1,15 +1,15 @@
-const mongoose = require('mongoose');
-const {Schema, model} = mongoose;
+const mongoose = require("mongoose");
+const { Schema, model } = mongoose;
 
 const cart = new Schema(
-     {
+    {
         userId: {
             type: Number,
             required: true,
             unique: true
         },
 
-        cartId:{
+        cartId: {
             type: String,
             required: true,
             unique: true
@@ -24,22 +24,18 @@ const cart = new Schema(
 
                 quantity: {
                     type: Number,
-                    default: 1,
-                    min: 1
+                    required: true,
+                    min: 1,
+                    default: 1
                 }
             }
-        ],
-
-        totalAmount: {
-            type: Number,
-            default: 0,
-            min: 0
-        }
+        ]
     },
     {
         timestamps: true
     }
 );
 
-const Cart = model('Cart', cart);
+const Cart = model("Cart", cart);
+
 module.exports = Cart;
