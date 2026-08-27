@@ -15,6 +15,12 @@ const order = new Schema(
             index: true
         },
 
+        razorpayOrderId: {
+            type: String,
+            default: null,
+            index: true
+        },
+
         products: [
             {
                 productId: {
@@ -92,34 +98,16 @@ const order = new Schema(
             min: 0
         },
 
-        currency: {
-            type: String,
-            default: "INR",
-            uppercase: true
-        },
-
-        paymentMode: {
-            type: String,
-            enum: [
-                "UPI",
-                "Card",
-                "NetBanking",
-                "Cash"
-            ],
-            default: null
-        },
-
         paymentStatus: {
             type: String,
             enum: [
-                "pending",
                 "created",
                 "authorized",
                 "captured",
-                "failed",
-                "refunded"
+                "refunded",
+                "failed"
             ],
-            default: "pending"
+            default: "created"
         },
 
         orderStatus: {
@@ -133,17 +121,6 @@ const order = new Schema(
             ],
             default: "pending"
         },
-
-        razorpayOrderId: {
-            type: String,
-            default: null,
-            index: true
-        },
-
-        razorpayPaymentId: {
-            type: String,
-            default: null
-        }
     },
     {
         timestamps: true

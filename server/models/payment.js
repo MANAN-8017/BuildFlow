@@ -46,30 +46,25 @@ const payment = new Schema(
         paymentMode: {
             type: String,
             enum: [
-                "UPI",
-                "Card",
-                "NetBanking",
-                "Cash"
+                "card",
+                "netbanking",
+                "wallet",
+                "emi",
+                "bank_transfer"
             ],
-            default: null
-        },
-
-        receipt: {
-            type: String,
-            default: null
+            default: "card"
         },
 
         status: {
             type: String,
             enum: [
-                "pending",
                 "created",
                 "authorized",
                 "captured",
-                "failed",
-                "refunded"
+                "refunded",
+                "failed"
             ],
-            default: "pending"
+            default: "created"
         }
     },
     {
