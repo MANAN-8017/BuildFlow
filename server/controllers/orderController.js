@@ -12,9 +12,9 @@ const createOrder = async (req, res) => {
             reciept: orderId
         });
 
-        var order = await Order.create({
+        const order = await Order.create({
             orderId,
-            razorpayOrderId: razorpayOrder.razorpayOrderId,
+            razorpayOrderId: razorpayOrder.id,
             userId: req.body.userId,
             products: req.body.products,
             shippingAddress: req.body.shippingAddress,
@@ -25,30 +25,9 @@ const createOrder = async (req, res) => {
             orderStatus: "pending"
         });
 
-        order = await Order.findOneAndUpdate(
-            { orderId },
-            {
-                razorpayOrderId: razorpayOrder.id,
-                paymentStatus: "created"
-            },
-            {
-                returnDocument: "after",
-                runValidators: true
-            }
-        );
-
-        res.status(201).json({
-            success: true,
-            order
-        });
-
+        res.status(201).json({ success: true, order, razorpayOrder });
     } catch (error) {
-
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -57,9 +36,7 @@ const getOrders = async (req, res) => {
         const orders = await Order.find();
         res.status(200).json(orders);
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+        res.status(500).json({ message: error.message });
     }
 };
 
