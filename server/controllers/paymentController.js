@@ -18,32 +18,37 @@ const verifyPayment = async (req, res) => {
             return res.status().json({ success: false, messgae: "Failed to find order"});
         }
 
-        const payment = await Payment.create({
-            userId: order.userId,
-            orderId: order.orderId,
-            razorpayOrderId: razorpayOrderId,
-            razorpayPaymentId: razorpayPaymentId, 
-            razorpaySignature: razorpaySignature,
-            amount: order.totalAmount,
-            currency: req.body.currency,
-            status: "captured"
-        });
+        const verifyPayment = await Payment.findOne({ razorpayPaymentId });
 
-        if (!payment) {
-            return res.status(404).json({ success: false, message: "Payment not created" });
+        if(!verifyPayment){
+            const payment = await Payment.create({
+                userId: order.userId,
+                orderId: order.orderId,
+                razorpayOrderId: razorpayOrderId,
+                razorpayPaymentId: razorpayPaymentId, 
+                razorpaySignature: razorpaySignature,
+                amount: order.totalAmount,
+                currency: req.body.currency,
+                status: "captured"
+            });
+
+            if (!payment) {
+                return res.status(404).json({ success: false, message: "Payment not created" });
+            }
+
+            const updateOrder = await Order.findOneAndUpdate(
+                { razorpayOrderId },
+                { paymentStatus: payment.status, orderStatus: "processing" },
+                { returnDocument: "after", runValidators: true }
+            );
+
+            if(!updateOrder){
+                return res.status().json({ success: false, messgae: "Failed to update payment status in order"});
+            }
+            res.status(200).json({ success: true, message: "Payment created & verified successfully", payment });
         }
 
-        const updateOrder = await Order.findOneAndUpdate(
-            { razorpayOrderId },
-            { paymentStatus: payment.status, orderStatus: "processing" },
-            { returnDocument: "after", runValidators: true }
-        );
-
-        if(!updateOrder){
-            return res.status().json({ success: false, messgae: "Failed to update payment status in order"});
-        }
-
-        res.status(200).json({ success: true, message: "Payment verified successfully", payment });
+        res.status(200).json({ success: true, message: "Payment verified successfully", verifyPayment });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
