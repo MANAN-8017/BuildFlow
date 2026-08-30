@@ -1,12 +1,15 @@
-const API_URL = "http://localhost:3000/api";
+const API_URL = "http://localhost:8000/api";
 
 export const API = {
+  login: `${API_URL}/auth/login`,
+  register: `${API_URL}/auth/register`,
+  me: `${API_URL}/auth/me`,
+  users: `${API_URL}/users`,
   products: `${API_URL}/products`,
-  estimations: `${API_URL}/estimations`,
+  cart: `${API_URL}/cart`,
   orders: `${API_URL}/orders`,
   payments: `${API_URL}/payments`,
-  cart: `${API_URL}/cart`,
-  users: `${API_URL}/users`,
+  estimations: `${API_URL}/estimations`,
 };
 
 export default API;
