@@ -1,5 +1,5 @@
 import "../styles/global.css";
-import "./Payment.css";
+import "../styles/Payment.css";
 function Payment() {
 
   const startPayment = () => {

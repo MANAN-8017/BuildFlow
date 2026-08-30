@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/global.css";
-import "./Checkout.css";
+import "../styles/Checkout.css";
 
 function Checkout() {
   const navigate = useNavigate();

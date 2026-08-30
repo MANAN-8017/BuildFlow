@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 
 import "../styles/global.css";
-import "./Cart.css";
+import "../styles/Cart.css";
 
 function Cart() {
     const { cartItems, cartCount, productName } = useAuth();

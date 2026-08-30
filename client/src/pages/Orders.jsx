@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "../styles/global.css";
-import "./Orders.css";
+import "../styles/Orders.css";
 
 function Orders() {
   const orders = [
