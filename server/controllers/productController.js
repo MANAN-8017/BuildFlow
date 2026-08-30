@@ -1,8 +1,19 @@
 const Product = require("../models/product");
+const { generateProductId } = require("../services/idService");
 
 const createProduct = async (req, res) => {
     try {
-        const product = await Product.create(req.body);
+
+        const productId = await generateProductId();
+
+        const product = await Product.create({
+            productId,
+            name: req.body.name,
+            description: req.body.description,
+            price: req.body.price,
+            quantity: req.body.quantity,
+            discount: req.body.discount
+        });
 
         res.status(201).json(product);
     } catch (error) {
@@ -16,7 +27,7 @@ const getProducts = async (req, res) => {
     try {
         const products = await Product.find();
 
-        res.status(200).json(products);
+        res.status(200).json({products: products});
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -24,22 +35,15 @@ const getProducts = async (req, res) => {
     }
 };
 
-
 const getProductById = async (req, res) => {
     try {
-        const product = await Product.findOne({
-            productId: req.params.productId
-        });
-
+        const product = await Product.findOne({ productId: req.params.productId });
         if (!product) {
-            return res.status(404).json({
-                message: "Product not found"
-            });
+            return res.status(404).json({ message: "Product not found" });
         }
-
-        res.status(200).json(product);
+        return res.status(200).json(product);
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             message: error.message
         });
     }
