@@ -22,7 +22,15 @@ const generateUserId = async () => {
 };
 
 const generateOrderId = async () => {
-    return generateId("order", "BF-ORD", 4);
+    return generateId("order", "ORDER", 4);
 };
 
-module.exports = { generateUserId, generateOrderId };
+const generateProductId = async () => {
+    return generateId("product", "PRODUCT", 4);
+}
+
+const generateCartId = async () => {
+    return generateId("cart", "CART", 3);
+}
+
+module.exports = { generateUserId, generateOrderId, generateProductId, generateCartId };
