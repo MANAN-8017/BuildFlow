@@ -1,93 +1,36 @@
-import "./Pages.css";
-import  Sidebar from "../components/Sidebar.jsx";
+import "../styles/global.css";
+import "./Payment.css";
+function Payment() {
 
-function PaymentPage() {
+  const startPayment = () => {
+    const options = {
+      key: "rzp_test_TR8B2ARZDElYTB",
+      amount: 55000,
+      currency: "INR",
+      name: "BuildFlow",
+      description: "Construction Material Order",
+      order_id: "order_TUfpCG0UKcaLiF",
+      handler: function (response) {
+        console.log("Payment successful!");
+        console.log("Payment ID:", response.razorpay_payment_id);
+        console.log("Order ID:", response.razorpay_order_id);
+        console.log("Signature:", response.razorpay_signature);
+        console.log(response);
+      },
+      prefill: {
+        name: "Manan Patel",
+        email: "manan@example.com",
+        contact: "9016948101"
+      },
+      theme: {
+        color: "#000000"
+      }
+    };
+    const razorpay = new window.Razorpay(options);
+    razorpay.open();
+  };
   return (
-    <div className="dashboard">
-      <aside className="sidebar">
-        <div className="brand">
-          <span>🏗️</span>
-          <h2>BuildFlow</h2>
-        </div>
-        <Sidebar />
-      </aside>
-
-      <main className="main-content">
-        <header className="topbar">
-          <div>
-            <h1>Payment</h1>
-            <p>Complete your order payment securely</p>
-          </div>
-
-          <div className="profile">
-            <div className="avatar">M</div>
-            <span>Admin</span>
-          </div>
-        </header>
-
-        <section className="payment-layout">
-          <div className="form-card">
-            <div className="form-header">
-              <div className="form-icon">💳</div>
-              <div>
-                <h2>Payment Details</h2>
-                <p>Enter the details required for payment</p>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Order ID</label>
-              <input type="text" placeholder="Enter order ID" />
-            </div>
-
-            <div className="form-group">
-              <label>Amount</label>
-              <input type="number" placeholder="₹ 0.00" />
-            </div>
-
-            <div className="payment-method">
-              <h3>Payment Method</h3>
-
-              <div className="payment-option">
-                <span>💳</span>
-                <div>
-                  <strong>Razorpay</strong>
-                  <p>UPI, Cards, Net Banking & Wallets</p>
-                </div>
-              </div>
-            </div>
-
-            <button className="btn-primary full-btn">
-              Proceed to Payment
-            </button>
-          </div>
-
-          <div className="payment-summary">
-            <h2>Payment Summary</h2>
-
-            <div className="summary-row">
-              <span>Order Amount</span>
-              <strong>₹0.00</strong>
-            </div>
-
-            <div className="summary-row">
-              <span>Processing Fee</span>
-              <strong>₹0.00</strong>
-            </div>
-
-            <div className="summary-total">
-              <span>Total</span>
-              <strong>₹0.00</strong>
-            </div>
-
-            <p className="secure">
-              🔒 Your payment information is securely processed.
-            </p>
-          </div>
-        </section>
-      </main>
-    </div>
+    <button onClick={startPayment}> Pay Anything </button>
   );
 }
-
-export default PaymentPage;
+export default Payment;
