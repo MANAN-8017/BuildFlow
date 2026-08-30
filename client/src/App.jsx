@@ -20,72 +20,21 @@ function App() {
     return (
         <BrowserRouter>
             <AuthProvider>
-
                 <Routes>
-
-                    {/* No Navbar */}
-                    <Route
-                        path="/login"
-                        element={<Login />}
-                    />
-
-                    <Route
-                        path="/register"
-                        element={<Register />}
-                    />
-
-                    {/* Navbar pages */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                     <Route element={<NavbarLayout />}>
-
-                        <Route
-                            path="/"
-                            element={<Home />}
-                        />
-
-                        <Route
-                            path="/products"
-                            element={<Products />}
-                        />
-
-                        <Route
-                            path="/products/:id"
-                            element={<ProductDetails />}
-                        />
-
-                        <Route
-                            path="/estimation"
-                            element={<Estimation />}
-                        />
-
-                        <Route
-                            path="/cart"
-                            element={<Cart />}
-                        />
-
-                        <Route
-                            path="/checkout"
-                            element={<Checkout />}
-                        />
-
-                        <Route
-                            path="/payment/:orderId"
-                            element={<Payment />}
-                        />
-
-                        <Route
-                            path="/orders"
-                            element={<Orders />}
-                        />
-
-                        <Route
-                            path="/orders/:id"
-                            element={<OrderDetails />}
-                        />
-
+                        <Route path="/" element={<Home />} />
+                        <Route path="/products" element={<Products />} />
+                        <Route path="/products/:id" element={<ProductDetails />} />
+                        <Route path="/estimation" element={<Estimation />} />
+                        <Route path="/cart" element={<Cart />} />
+                        <Route path="/checkout" element={<Checkout />} />
+                        <Route path="/payment/:orderId" element={<Payment />} />
+                        <Route path="/orders" element={<Orders />} />
+                        <Route path="/orders/:id" element={<OrderDetails />} />
                     </Route>
-
                 </Routes>
-
             </AuthProvider>
         </BrowserRouter>
     );
