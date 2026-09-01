@@ -54,6 +54,11 @@ const estimation = new Schema(
             type: Number,
             required: true,
             min: 0
+        },
+        
+        aiSummary: {
+            type: String,
+            default: ""
         }
     },
     {

@@ -33,4 +33,8 @@ const generateCartId = async () => {
     return generateId("cart", "CART", 3);
 }
 
-module.exports = { generateUserId, generateOrderId, generateProductId, generateCartId };
+const generateEstimationId = async () => {
+    return generateId("estimation", "EST", 4);
+}
+
+module.exports = { generateUserId, generateOrderId, generateProductId, generateCartId, generateEstimationId };
