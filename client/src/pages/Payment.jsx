@@ -9,7 +9,7 @@ function Payment() {
       currency: "INR",
       name: "BuildFlow",
       description: "Construction Material Order",
-      order_id: "order_TUfpCG0UKcaLiF",
+      order_id: "order_TWfXsZM831cDZB",
       handler: function (response) {
         console.log("Payment successful!");
         console.log("Payment ID:", response.razorpay_payment_id);

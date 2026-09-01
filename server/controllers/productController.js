@@ -15,11 +15,28 @@ const createProduct = async (req, res) => {
             discount: req.body.discount
         });
 
-        res.status(201).json(product);
+        return res.status(201).json(product);
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+const createMultipleProducts = async (req, res) => {
+    try {
+        const productsData = req.body.products;
+        
+        if (!Array.isArray(productsData) || productsData.length === 0) {
+            return res.status(400).json({ success: false, message: "Invalid products data" });
+        }
+
+        const products = [];
+        for (const productData of productsData) {
+            await createProduct(productData);
+        }
+
+        return res.status(201).json(products);
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -27,7 +44,7 @@ const getProducts = async (req, res) => {
     try {
         const products = await Product.find();
 
-        res.status(200).json({products: products});
+        res.status(200).json({ success: true, products: products });
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -99,4 +116,4 @@ const deleteProduct = async (req, res) => {
 };
 
 
-module.exports = { createProduct, getProducts, getProductById, updateProduct, deleteProduct };
+module.exports = { createProduct, createMultipleProducts, getProducts, getProductById, updateProduct, deleteProduct };

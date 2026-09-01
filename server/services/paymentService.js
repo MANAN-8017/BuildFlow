@@ -15,6 +15,7 @@ const create = async (req) => {
         };
 
         const order = await instance.orders.create(options);
+        console.log("Razorpay order created:", order);
         return order;
     } catch (error) {
         throw new Error(`Error creating payment: ${error.message}`);
@@ -31,14 +32,12 @@ const verify = ( razorpayOrderId, razorpayPaymentId, razorpaySignature ) => {
         .update(payload)
         .digest("hex");
 
-    console.log("\n========== PAYMENT VERIFICATION ==========");
     console.log("Order ID:", razorpayOrderId);
     console.log("Payment ID:", razorpayPaymentId);
     console.log("Received:", razorpaySignature);
     console.log("Generated:", generated_signature);
     console.log("Payload:", payload);
     console.log("Match:", generated_signature === razorpaySignature);
-    console.log("==========================================\n");
 
     return generated_signature === razorpaySignature;
 };

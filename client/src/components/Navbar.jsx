@@ -1,7 +1,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
-import "./Navbar.css";
+import "../styles/Navbar.css";
 
 function Navbar() {
     const navigate = useNavigate();

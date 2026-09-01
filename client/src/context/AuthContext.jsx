@@ -50,6 +50,7 @@ export function AuthProvider({ children }) {
                 return null;
             }
             setUser(data.user);
+            console.log("User fetched successfully:", data.user);
             return data.user;
         } catch (error) {
             console.error("Failed to fetch user:", error);
@@ -88,7 +89,7 @@ export function AuthProvider({ children }) {
             }
 
             setCart(data.cart);
-
+            console.log("Cart fetched successfully:", data.cart);
             const productIds = data.cart?.products?.map(item => item.productId) || null;
             fetchProduct(productIds);
             
@@ -119,16 +120,17 @@ export function AuthProvider({ children }) {
         
                 console.log("PRODUCT IS HERE", products);
                 setProducts(products);
+                console.log("Products fetched successfully:", products);
                 return products;
-            } catch(error){
-                console.error("Failed to fetch product:", error);
-                setProducts([]);
-                return [];
-            }
-        };
+        } catch(error){
+            console.error("Failed to fetch product:", error);
+            setProducts([]);
+            return [];
+        }
+    };
 
-        const logout = () => {
-            localStorage.removeItem("token");
+    const logout = () => {
+        localStorage.removeItem("token");
         setUser(null);
         setCart(null);
         setProducts([]);

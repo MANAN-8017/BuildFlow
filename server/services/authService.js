@@ -11,7 +11,7 @@ const generateToken = (user) => {
             expiresIn: process.env.JWT_EXPIRES_IN || "7d"
         }
     );
-    console.log("Token at service: ", token);
+    console.log("Token generated at service: ", token);
     return token;
 };
 

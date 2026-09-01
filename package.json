@@ -24,7 +24,9 @@
     "concurrently": "^10.0.3"
   },
   "dependencies": {
+    "@google/genai": "^2.20.0",
     "client": "^0.0.1",
+    "genai": "^0.0.18",
     "mongodb": "^7.6.0",
     "mongoose": "^9.9.2",
     "nodemon": "^3.1.14",
