@@ -3,40 +3,35 @@ const { generateProductId } = require("../services/idService");
 
 const createProduct = async (req, res) => {
     try {
-
-        const productId = await generateProductId();
-
-        const product = await Product.create({
-            productId,
-            name: req.body.name,
-            description: req.body.description,
-            price: req.body.price,
-            quantity: req.body.quantity,
-            discount: req.body.discount
-        });
-
-        return res.status(201).json(product);
-    } catch (error) {
-        return res.status(500).json({ success: false, message: error.message });
-    }
-};
-
-const createMultipleProducts = async (req, res) => {
-    try {
         const productsData = req.body.products;
-        
         if (!Array.isArray(productsData) || productsData.length === 0) {
-            return res.status(400).json({ success: false, message: "Invalid products data" });
+            const productId = await generateProductId();
+            const product = await Product.create({
+                productId,
+                name: req.body.name,
+                description: req.body.description,
+                price: req.body.price,
+                quantity: req.body.quantity,
+                discount: req.body.discount
+            });
+            console.log("Product created successfully:", product);
+            return res.status(201).json({ success: true, message: "Product created successfully", product: product });
         }
-
         const products = [];
         for (const productData of productsData) {
-            await createProduct(productData);
+            const product = await Product.create({
+                productId: await generateProductId(),
+                name: productData.name,
+                description: productData.description,
+                price: productData.price,
+                quantity: productData.quantity,
+                discount: productData.discount
+            });
+            products.push(product);
         }
-
-        return res.status(201).json(products);
+        return res.status(201).json({ success: true, message: "Products created successfully", products: products });
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        return res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -116,4 +111,4 @@ const deleteProduct = async (req, res) => {
 };
 
 
-module.exports = { createProduct, createMultipleProducts, getProducts, getProductById, updateProduct, deleteProduct };
+module.exports = { createProduct, getProducts, getProductById, updateProduct, deleteProduct };
