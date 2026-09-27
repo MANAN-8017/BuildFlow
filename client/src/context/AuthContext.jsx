@@ -103,31 +103,36 @@ export function AuthProvider({ children }) {
     };
     
     const fetchProduct = async (productIds) => {
-        try{
-            if(productIds == []){
-                console.error("Failed to fetch productId:");
-                setProducts([]);
-                return [];
-            }
-
-            const products = await Promise.all(
-                productIds.map(async (productId) => {
-                    const response = await fetch(`${API.products}/${productId}`);
-                    const data = await response.json();
-                    return data;
-                })
-            );
-        
-                console.log("PRODUCT IS HERE", products);
-                setProducts(products);
-                console.log("Products fetched successfully:", products);
-                return products;
-        } catch(error){
-            console.error("Failed to fetch product:", error);
+    try {
+        if (!productIds || productIds.length === 0) {
             setProducts([]);
             return [];
         }
-    };
+
+        const products = await Promise.all(
+            productIds.map(async (productId) => {
+                const response = await fetch(
+                    `${API.products}/${productId}`
+                );
+
+                const data = await response.json();
+
+                return data;
+            })
+        );
+
+        setProducts(products);
+
+        return products;
+
+    } catch (error) {
+        console.error("Failed to fetch product:", error);
+
+        setProducts([]);
+
+        return [];
+    }
+};
 
     const logout = () => {
         localStorage.removeItem("token");
@@ -176,7 +181,8 @@ export function AuthProvider({ children }) {
                 cart,
                 cartItems,
                 cartCount,
-                productName
+                productName,
+                loading
             }}
         >
             {children}

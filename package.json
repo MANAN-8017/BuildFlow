@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/MANAN-8017/BuildFlow#readme",
   "devDependencies": {
-    "concurrently": "^10.0.3"
+    "concurrently": "^10.0.5"
   },
   "dependencies": {
     "@google/genai": "^2.20.0",

@@ -11,6 +11,7 @@ import Cart from "./pages/Cart.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import Payment from "./pages/Payment.jsx";
 import Orders from "./pages/Orders.jsx";
+import Products from "./pages/Products.jsx";
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route element={<NavbarLayout />}>
                         <Route path="/" element={<Home />} />
+                        <Route path="/products" element={<Products />} />
                         <Route path="/cart" element={<Cart />} />
                         <Route path="/checkout" element={<Checkout />} />
                         <Route path="/payment/:orderId" element={<Payment />} />
