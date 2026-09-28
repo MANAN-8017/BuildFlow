@@ -53,7 +53,10 @@ const createEstimation = async (req, res) => {
 
 const getEstimations = async (req, res) => {
     try {
-        const estimations = await Estimation.find();
+        const estimations = await Estimation.find({
+            userId: req.user.userId
+        }).sort({ createdAt: -1 });
+
         res.status(200).json(estimations);
     } catch (error) {
         res.status(500).json({
@@ -65,7 +68,8 @@ const getEstimations = async (req, res) => {
 const getEstimationById = async (req, res) => {
     try {
         const estimation = await Estimation.findOne({
-            estimationId: req.params.estimationId
+            estimationId: req.params.estimationId,
+            userId: req.user.userId
         });
 
         if (!estimation) {
