@@ -12,6 +12,7 @@ import Checkout from "./pages/Checkout.jsx";
 import Payment from "./pages/Payment.jsx";
 import Orders from "./pages/Orders.jsx";
 import Products from "./pages/Products.jsx";
+import OrderDetails from "./pages/OrderDetails.jsx";
 import Profile from "./pages/Profile.jsx";
 
 function App() {
@@ -22,13 +23,23 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                    <Route element={<NavbarLayout />}>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/cart" element={<Cart />} />
-                    <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/payment/:orderId" element={<Payment />} />
-                    <Route path="/orders" element={<Orders />} />
-                    <Route path="/profile" element={<Profile />} />
-                </Route>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/products" element={<Products />} />
+                        <Route path="/cart" element={<Cart />} />
+                        <Route path="/checkout" element={<Checkout />} />
+                        <Route
+                            path="/payment/:orderId"
+                            element={<Payment />}
+                        />
+                        <Route
+                            path="/orders"
+                            element={<Orders />}
+                        />
+                        <Route
+                            path="/orders/:orderId"
+                            element={<OrderDetails />}
+                        />
+                    </Route>
                 </Routes>
             </AuthProvider>
         </BrowserRouter>

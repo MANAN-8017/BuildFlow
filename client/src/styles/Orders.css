@@ -165,3 +165,73 @@
     grid-column: 1 / -1;
   }
 }
+
+.orders-loading {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 50px;
+    border: 1px solid #e5e5e5;
+    border-radius: 14px;
+    background: white;
+    color: #777;
+    text-align: center;
+    font-size: 14px;
+}
+
+.orders-empty {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 60px 30px;
+    border: 1px solid #e5e5e5;
+    border-radius: 14px;
+    background: white;
+    text-align: center;
+}
+
+.orders-empty h2 {
+    margin: 0 0 10px;
+    font-size: 24px;
+}
+
+.orders-empty p {
+    max-width: 450px;
+    margin: 0 auto 25px;
+    color: #777;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.orders-shop-button {
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 6px;
+    background: #171717;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.orders-shop-button:hover {
+    background: #333;
+}
+
+.order-status.pending {
+    background: #eeeeee;
+    color: #555;
+}
+
+.order-status.processing {
+    background: #eeeeee;
+    color: #333;
+}
+
+.order-status.shipped {
+    background: #eeeeee;
+    color: #222;
+}
+
+.order-status.delivered {
+    background: #e8e8e8;
+    color: #171717;
+}
