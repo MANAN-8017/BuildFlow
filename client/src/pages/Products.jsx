@@ -67,65 +67,74 @@ function Products() {
     };
 
     const addToCart = async (product) => {
-        if (!user) {
-            toast.error("Please login to add products to cart.");
+    if (!user) {
+        toast.error("Please login to add products to cart.");
+        return;
+    }
+
+    if (Number(product.quantity) <= 0) {
+        toast.error("This product is out of stock.");
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            toast.error("Please login again.");
             return;
         }
 
-        if (Number(product.quantity) <= 0) {
-            toast.error("This product is currently out of stock.");
-            return;
-        }
+        const currentProducts = cart?.products || [];
 
-        try {
-            const token = localStorage.getItem("token");
+        const existingProduct = currentProducts.find(
+            (item) => item.productId === product.productId
+        );
 
-            const existingProducts = cart?.products || [];
+        let updatedProducts;
 
-            const existingProduct = existingProducts.find(
-                (item) => item.productId === product.productId
-            );
-
-            let updatedProducts;
-
-            if (existingProduct) {
-                updatedProducts = existingProducts.map((item) =>
-                    item.productId === product.productId
-                        ? {
-                              ...item,
-                              quantity: item.quantity + 1
-                          }
-                        : item
-                );
-            } else {
-                updatedProducts = [
-                    ...existingProducts,
-                    {
-                        productId: product.productId,
-                        quantity: 1
-                    }
-                ];
+        if (existingProduct) {
+            if (existingProduct.quantity >= product.quantity) {
+                toast.error("You cannot add more than available stock.");
+                return;
             }
 
-            let response;
-
-            if (cart?.cartId) {
-                response = await fetch(
-                    `${API.cart}/${cart.cartId}/${user.userId}`,
-                    {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`
-                        },
-                        body: JSON.stringify({
-                            products: updatedProducts
-                        })
+            updatedProducts = currentProducts.map((item) =>
+                item.productId === product.productId
+                    ? {
+                        ...item,
+                        quantity: item.quantity + 1
                     }
-                );
-            } else {
-                response = await fetch(API.cart, {
-                    method: "POST",
+                    : item
+            );
+        } else {
+            updatedProducts = [
+                ...currentProducts,
+                {
+                    productId: product.productId,
+                    quantity: 1
+                }
+            ];
+        }
+
+        let response;
+
+        if (!cart?.cartId) {
+            response = await fetch(`${API.cart}/create`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    products: updatedProducts
+                })
+            });
+        } else {
+            response = await fetch(
+                `${API.cart}/${cart.cartId}`,
+                {
+                    method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`
@@ -133,27 +142,34 @@ function Products() {
                     body: JSON.stringify({
                         products: updatedProducts
                     })
-                });
-            }
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || "Failed to add product");
-            }
-
-            await fetchCart();
-
-            toast.success(
-                existingProduct
-                    ? "Product quantity increased."
-                    : "Product added to cart."
+                }
             );
-        } catch (error) {
-            console.error("Add to cart error:", error);
-            toast.error(error.message || "Failed to add product to cart.");
         }
-    };
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(
+                data.message || "Failed to add product to cart."
+            );
+        }
+
+        await fetchCart();
+
+        if (existingProduct) {
+            toast.success("Product quantity increased.");
+        } else {
+            toast.success("Product added to cart.");
+        }
+
+    } catch (error) {
+        console.error("Add to cart error:", error);
+
+        toast.error(
+            error.message || "Failed to add product to cart."
+        );
+    }
+};
 
     if (loading) {
         return (
@@ -254,11 +270,6 @@ function Products() {
                                 <div className="product-content">
 
                                     <div className="product-top">
-
-                                        <span className="product-id">
-                                            {product.productId}
-                                        </span>
-
                                         {stock > 0 ? (
                                             <span className="stock available">
                                                 In Stock
@@ -268,7 +279,6 @@ function Products() {
                                                 Out of Stock
                                             </span>
                                         )}
-
                                     </div>
 
                                     <h2>{product.name}</h2>

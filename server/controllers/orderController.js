@@ -4,39 +4,76 @@ const paymentService = require("../services/paymentService");
 
 const createOrder = async (req, res) => {
     try {
+        const userId = req.user.userId;
+
+        const {
+            products,
+            shippingAddress,
+            subtotal,
+            deliveryCharge,
+            totalAmount,
+            currency
+        } = req.body;
+
+        if (!products || !products.length) {
+            return res.status(400).json({
+                success: false,
+                message: "Order must contain at least one product."
+            });
+        }
+
+        if (!shippingAddress) {
+            return res.status(400).json({
+                success: false,
+                message: "Shipping address is required."
+            });
+        }
+
         const orderId = await generateOrderId();
 
         const razorpayOrder = await paymentService.create({
-            amount: req.body.totalAmount,
-            currency: req.body.currency,
-            reciept: orderId
+            amount: totalAmount,
+            currency: currency || "INR",
+            receipt: orderId
         });
 
         const order = await Order.create({
             orderId,
             razorpayOrderId: razorpayOrder.id,
-            userId: req.body.userId,
-            products: req.body.products,
-            shippingAddress: req.body.shippingAddress,
-            subtotal: req.body.subtotal,
-            deliveryCharge: req.body.deliveryCharge,
-            totalAmount: req.body.totalAmount,
+            userId,
+            products,
+            shippingAddress,
+            subtotal,
+            deliveryCharge,
+            totalAmount,
             paymentStatus: razorpayOrder.status,
             orderStatus: "pending"
         });
 
-        res.status(201).json({ success: true, order, razorpayOrder });
+        return res.status(201).json({
+            success: true,
+            order,
+            razorpayOrder
+        });
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        console.error("Create order error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 };
 
 const getOrders = async (req, res) => {
     try {
         const orders = await Order.find();
+
         res.status(200).json(orders);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({
+            message: error.message
+        });
     }
 };
 
@@ -123,4 +160,11 @@ const deleteOrder = async (req, res) => {
     }
 };
 
-module.exports = { createOrder, getOrders, getOrderById, getOrdersByUserId, updateOrder, deleteOrder };
+module.exports = {
+    createOrder,
+    getOrders,
+    getOrderById,
+    getOrdersByUserId,
+    updateOrder,
+    deleteOrder
+};
