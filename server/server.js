@@ -1,5 +1,10 @@
 require("dotenv").config();
 require("./config/db")();
+const { updateDeliveredOrders } = require("./services/orderStatusService");
+
+updateDeliveredOrders();
+
+setInterval(updateDeliveredOrders, 60*60*1000);
 
 const app = require("./app");
 

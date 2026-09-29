@@ -235,3 +235,50 @@
     background: #e8e8e8;
     color: #171717;
 }
+
+.order-statuses {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+.payment-status,
+.order-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.payment-status {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.order-status.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.order-status.processing {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.order-status.shipped {
+    background: #ede7f6;
+    color: #5e35b1;
+}
+
+.order-status.delivered {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.order-status.cancelled {
+    background: #ffebee;
+    color: #c62828;
+}

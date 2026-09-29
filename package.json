@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@google/genai": "^2.20.0",
+    "@rolldown/binding-win32-x64-msvc": "^1.2.11",
     "client": "^0.0.1",
     "genai": "^0.0.18",
     "mongodb": "^7.6.0",

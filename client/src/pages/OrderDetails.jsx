@@ -424,45 +424,98 @@ function OrderDetails() {
                         <div className="details-card">
                             <div className="details-card-header">
                                 <span>
-                                    PAYMENT
+                                    ORDER
                                 </span>
 
                                 <h2>
-                                    Payment Details
+                                    Order Status
                                 </h2>
                             </div>
 
-                            <div className="payment-details">
-                                <div>
-                                    <span>
-                                        Payment Status
-                                    </span>
+                            <div className="order-status-details">
+                                <div className="status-line">
+                                    <span className="status-dot completed"></span>
 
-                                    <strong>
-                                        Captured
-                                    </strong>
+                                    <div>
+                                        <strong>
+                                            Order Placed
+                                        </strong>
+
+                                        <span>
+                                            Your order has been placed successfully.
+                                        </span>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <span>
-                                        Order ID
-                                    </span>
+                                <div className="status-line">
+                                    <span
+                                        className={`status-dot ${
+                                            [
+                                                "processing",
+                                                "shipped",
+                                                "delivered"
+                                            ].includes(order.orderStatus)
+                                                ? "completed"
+                                                : ""
+                                        }`}
+                                    ></span>
 
-                                    <strong>
-                                        {order.orderId}
-                                    </strong>
+                                    <div>
+                                        <strong>
+                                            Processing
+                                        </strong>
+
+                                        <span>
+                                            Your order is being processed.
+                                        </span>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <span>
-                                        Razorpay Order
-                                    </span>
+                                <div className="status-line">
+                                    <span
+                                        className={`status-dot ${
+                                            [
+                                                "shipped",
+                                                "delivered"
+                                            ].includes(order.orderStatus)
+                                                ? "completed"
+                                                : ""
+                                        }`}
+                                    ></span>
 
-                                    <strong>
-                                        {
-                                            order.razorpayOrderId
-                                        }
-                                    </strong>
+                                    <div>
+                                        <strong>
+                                            Shipped
+                                        </strong>
+
+                                        <span>
+                                            Your order has been shipped.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="status-line">
+                                    <span
+                                        className={`status-dot ${
+                                            order.orderStatus ===
+                                            "delivered"
+                                                ? "completed"
+                                                : ""
+                                        }`}
+                                    ></span>
+
+                                    <div>
+                                        <strong>
+                                            Delivered
+                                        </strong>
+
+                                        <span>
+                                            {order.orderStatus ===
+                                            "delivered"
+                                                ? "Order delivered successfully."
+                                                : "Expected within 2 days."}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

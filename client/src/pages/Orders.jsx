@@ -284,14 +284,19 @@ function Orders() {
                                     </strong>
                                 </div>
 
-                                <span
-                                    className={`order-status ${order.orderStatus}`}
-                                >
-                                    {order.orderStatus ===
-                                    "delivered"
-                                        ? "Delivered"
-                                        : "Paid"}
-                                </span>
+                                <div className="order-statuses">
+                                    <span className="payment-status">
+                                        Payment: Paid
+                                    </span>
+
+                                    <span
+                                        className={`order-status ${order.orderStatus}`}
+                                    >
+                                        Order:{" "}
+                                        {order.orderStatus.charAt(0).toUpperCase() +
+                                            order.orderStatus.slice(1)}
+                                    </span>
+                                </div>
 
                                 <Link
                                     to={`/orders/${order.orderId}`}
