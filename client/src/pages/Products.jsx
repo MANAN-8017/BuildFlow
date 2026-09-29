@@ -17,9 +17,24 @@ function Products() {
     const [search, setSearch] = useState("");
     const [stockFilter, setStockFilter] = useState("all");
 
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const productsPerPage = 15;
+
     useEffect(() => {
         fetchProducts();
     }, []);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search, stockFilter]);
+
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }, [currentPage]);
 
     const fetchProducts = async () => {
         try {
@@ -58,6 +73,17 @@ function Products() {
             return matchesSearch && matchesStock;
         });
     }, [products, search, stockFilter]);
+
+    const totalPages = Math.ceil(
+        filteredProducts.length / productsPerPage
+    );
+
+    const paginatedProducts = useMemo(() => {
+        const startIndex = (currentPage - 1) * productsPerPage;
+        const endIndex = startIndex + productsPerPage;
+
+        return filteredProducts.slice(startIndex, endIndex);
+    }, [filteredProducts, currentPage]);
 
     const getDiscountedPrice = (product) => {
         const price = Number(product.price || 0);
@@ -246,10 +272,10 @@ function Products() {
                 </section>
             )}
 
-            {!error && filteredProducts.length > 0 && (
+            {!error && paginatedProducts.length > 0 && (
                 <section className="products-grid">
 
-                    {filteredProducts.map((product) => {
+                    {paginatedProducts.map((product) => {
                         const price = Number(product.price || 0);
                         const discount = Number(product.discount || 0);
                         const finalPrice = getDiscountedPrice(product);
@@ -337,6 +363,46 @@ function Products() {
                     })}
 
                 </section>
+            )}
+
+            {totalPages > 1 && (
+                <div className="pagination">
+
+                    <button
+                        className="pagination-button"
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage((page) => page - 1)}
+                    >
+                        Previous
+                    </button>
+
+                    <div className="pagination-pages">
+                        {Array.from({ length: totalPages }, (_, index) => {
+                            const page = index + 1;
+
+                            return (
+                                <button
+                                    key={page}
+                                    className={`pagination-page ${
+                                        currentPage === page ? "active" : ""
+                                    }`}
+                                    onClick={() => setCurrentPage(page)}
+                                >
+                                    {page}
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    <button
+                        className="pagination-button"
+                        disabled={currentPage === totalPages}
+                        onClick={() => setCurrentPage((page) => page + 1)}
+                    >
+                        Next
+                    </button>
+
+                </div>
             )}
 
         </main>

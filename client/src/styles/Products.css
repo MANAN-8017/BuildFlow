@@ -336,3 +336,46 @@
         grid-template-columns: 1fr;
     }
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin: 40px 0;
+}
+
+.pagination-pages {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pagination-button,
+.pagination-page {
+    border: 1px solid #dcdcdc;
+    background: white;
+    color: #222;
+    padding: 9px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pagination-button:hover:not(:disabled),
+.pagination-page:hover {
+    background: #f3f3f3;
+}
+
+.pagination-page.active {
+    background: #111;
+    color: white;
+    border-color: #111;
+}
+
+.pagination-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
