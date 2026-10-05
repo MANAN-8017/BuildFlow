@@ -243,9 +243,9 @@ function Orders() {
                                         ORDER
                                     </span>
 
-                                    <strong>
+                                    {/* <strong>
                                         #{order.orderId}
-                                    </strong>
+                                    </strong> */}
                                 </div>
 
                                 <div className="order-date">

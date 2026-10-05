@@ -1,12 +1,13 @@
 const Payment = require("../models/payment");
 const Order = require("../models/order");
 const paymentService = require("../services/paymentService");
+const Product = require("../models/product");
 
 const verifyPayment = async (req, res) => {
     try {
         const { razorpayOrderId, razorpayPaymentId, razorpaySignature } = req.body;
 
-        const isValid = paymentService.verify( razorpayOrderId, razorpayPaymentId, razorpaySignature );
+        const isValid = paymentService.verify(razorpayOrderId, razorpayPaymentId, razorpaySignature);
 
         if (!isValid) {
             return res.status(400).json({ success: false, message: "Invalid payment signature" });
@@ -14,18 +15,18 @@ const verifyPayment = async (req, res) => {
 
         const order = await Order.findOne({ razorpayOrderId });
 
-        if(!order){
-            return res.status().json({ success: false, messgae: "Failed to find order"});
+        if (!order) {
+            return res.status().json({ success: false, messgae: "Failed to find order" });
         }
 
         const verifyPayment = await Payment.findOne({ razorpayPaymentId });
 
-        if(!verifyPayment){
+        if (!verifyPayment) {
             const payment = await Payment.create({
                 userId: order.userId,
                 orderId: order.orderId,
                 razorpayOrderId: razorpayOrderId,
-                razorpayPaymentId: razorpayPaymentId, 
+                razorpayPaymentId: razorpayPaymentId,
                 razorpaySignature: razorpaySignature,
                 amount: order.totalAmount,
                 currency: req.body.currency,
@@ -36,19 +37,40 @@ const verifyPayment = async (req, res) => {
                 return res.status(404).json({ success: false, message: "Payment not created" });
             }
 
+            for (const item of order.products) {
+                const product = await Product.findOne({
+                    productId: item.productId
+                });
+
+                if (product) {
+                    product.quantity -= item.quantity;
+                    console.log(product.quantity);
+                    await product.save();
+                }
+            }
             const updateOrder = await Order.findOneAndUpdate(
                 { razorpayOrderId },
                 { paymentStatus: payment.status, orderStatus: "processing" },
                 { returnDocument: "after", runValidators: true }
             );
 
-            if(!updateOrder){
-                return res.status().json({ success: false, messgae: "Failed to update payment status in order"});
+            if (!updateOrder) {
+                return res.status().json({ success: false, messgae: "Failed to update payment status in order" });
             }
-            res.status(200).json({ success: true, message: "Payment created & verified successfully", payment });
+
+            return res.status(200).json({
+                success: true,
+                message: "Payment created & verified successfully",
+                payment
+            });
         }
 
-        res.status(200).json({ success: true, message: "Payment verified successfully", verifyPayment });
+
+        return res.status(200).json({
+            success: true,
+            message: "Payment verified successfully",
+            verifyPayment
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

@@ -7,6 +7,15 @@ import { useAuth } from "../context/AuthContext.jsx";
 
 import "../styles/Products.css";
 
+const productImages = import.meta.glob(
+    "../assets/products/*",
+    {
+        eager: true,
+        query: "?url",
+        import: "default"
+    }
+);
+
 function Products() {
     const { user, cart, fetchCart } = useAuth();
 
@@ -23,6 +32,16 @@ function Products() {
 
     useEffect(() => {
         fetchProducts();
+
+        const handleFocus = () => {
+            fetchProducts();
+        };
+
+        window.addEventListener("focus", handleFocus);
+
+        return () => {
+            window.removeEventListener("focus", handleFocus);
+        };
     }, []);
 
     useEffect(() => {
@@ -56,6 +75,121 @@ function Products() {
             setLoading(false);
         }
     };
+
+    const getProductImage = (productName) => {
+    const name = productName.toLowerCase();
+
+    let imageName = "cement.jpeg";
+
+    if (
+        name.includes("tmt") ||
+        name.includes("cold twisted") ||
+        name.includes("fe-415") ||
+        name.includes("fe-500") ||
+        name.includes("fe-550")
+    ) {
+        imageName = "MS-TMT-Bars.jpg";
+    } else if (name.includes("binding wire")) {
+        imageName = "binding-wire.jpg";
+    } else if (
+        name.includes("structural steel") ||
+        name.includes("steel plate") ||
+        name.includes("steel angle")
+    ) {
+        imageName = "steel.jpg";
+    } else if (name.includes("cement")) {
+        imageName = "cement.jpeg";
+    } else if (
+        name.includes("sand") ||
+        name.includes("m-sand")
+    ) {
+        imageName = "sand.jpg";
+    } else if (
+        name.includes("aggregate") ||
+        name.includes("stone chips")
+    ) {
+        imageName = "aggregate.jpg";
+    } else if (name.includes("gravel")) {
+        imageName = "gravel.jpg";
+    } else if (
+        name.includes("brick") ||
+        name.includes("aac block")
+    ) {
+        imageName = "bricks.jpg";
+    } else if (
+        name.includes("rubble stone") ||
+        name.includes("stone dust") ||
+        name.includes("granite") ||
+        name.includes("marble")
+    ) {
+        imageName = "stone.jpg";
+    } else if (name.includes("rcc jali")) {
+        imageName = "rcc-jali.jpg";
+    } else if (
+        name.includes("concrete tile") ||
+        name.includes("precast cement")
+    ) {
+        imageName = "concrete-tiles.jpg";
+    } else if (
+        name.includes("ceramic") ||
+        name.includes("vitrified") ||
+        name.includes("wall tile")
+    ) {
+        imageName = "ceramic-tiles.jpg";
+    } else if (
+        name.includes("tile adhesive") ||
+        name.includes("grout")
+    ) {
+        imageName = "ceramic-tiles.jpg";
+    } else if (name.includes("kota stone")) {
+        imageName = "kota-stone.jpg";
+    } else if (name.includes("terrazzo")) {
+        imageName = "terrazzo-tiles.jpg";
+    } else if (name.includes("plywood")) {
+        imageName = "plywood.jpg";
+    } else if (
+        name.includes("paint") ||
+        name.includes("primer") ||
+        name.includes("distemper")
+    ) {
+        imageName = "paint.jpg";
+    } else if (
+        name.includes("mesh")
+    ) {
+        imageName = "mesh.jpg";
+    } else if (name.includes("safety net")) {
+        imageName = "safety-net.jpg";
+    } else if (
+        name.includes("pipe") ||
+        name.includes("conduit")
+    ) {
+        imageName = "pipes.jpg";
+    } else if (
+        name.includes("bituminous") ||
+        name.includes("bitumen") ||
+        name.includes("black japan") ||
+        name.includes("coal tar")
+    ) {
+        imageName = "Coal-Tar.jpg";
+    } else if (name.includes("waterproofing")) {
+        imageName = "waterproofing.jpg";
+    } else if (name.includes("expansion joint")) {
+        imageName = "construction-joint.jpg";
+    } else if (
+        name.includes("copper wire") ||
+        name.includes("electrical wire")
+    ) {
+        imageName = "binding-wire.jpg";
+    } else if (
+        name.includes("ready mix concrete")
+    ) {
+        imageName = "concrete.jpg";
+    }
+
+    const imagePath = `../assets/products/${imageName}`;
+
+    return productImages[imagePath] || null;
+};
 
     const filteredProducts = useMemo(() => {
         return products.filter((product) => {
@@ -93,74 +227,61 @@ function Products() {
     };
 
     const addToCart = async (product) => {
-    if (!user) {
-        toast.error("Please login to add products to cart.");
-        return;
-    }
-
-    if (Number(product.quantity) <= 0) {
-        toast.error("This product is out of stock.");
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            toast.error("Please login again.");
+        if (!user) {
+            toast.error("Please login to add products to cart.");
             return;
         }
 
-        const currentProducts = cart?.products || [];
+        if (Number(product.quantity) <= 0) {
+            toast.error("This product is out of stock.");
+            return;
+        }
 
-        const existingProduct = currentProducts.find(
-            (item) => item.productId === product.productId
-        );
+        try {
+            const token = localStorage.getItem("token");
 
-        let updatedProducts;
-
-        if (existingProduct) {
-            if (existingProduct.quantity >= product.quantity) {
-                toast.error("You cannot add more than available stock.");
+            if (!token) {
+                toast.error("Please login again.");
                 return;
             }
 
-            updatedProducts = currentProducts.map((item) =>
-                item.productId === product.productId
-                    ? {
-                        ...item,
-                        quantity: item.quantity + 1
-                    }
-                    : item
+            const currentProducts = cart?.products || [];
+
+            const existingProduct = currentProducts.find(
+                (item) => item.productId === product.productId
             );
-        } else {
-            updatedProducts = [
-                ...currentProducts,
-                {
-                    productId: product.productId,
-                    quantity: 1
+
+            let updatedProducts;
+
+            if (existingProduct) {
+                if (existingProduct.quantity >= product.quantity) {
+                    toast.error("You cannot add more than available stock.");
+                    return;
                 }
-            ];
-        }
 
-        let response;
+                updatedProducts = currentProducts.map((item) =>
+                    item.productId === product.productId
+                        ? {
+                            ...item,
+                            quantity: item.quantity + 1
+                        }
+                        : item
+                );
+            } else {
+                updatedProducts = [
+                    ...currentProducts,
+                    {
+                        productId: product.productId,
+                        quantity: 1
+                    }
+                ];
+            }
 
-        if (!cart?.cartId) {
-            response = await fetch(`${API.cart}/create`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    products: updatedProducts
-                })
-            });
-        } else {
-            response = await fetch(
-                `${API.cart}/${cart.cartId}`,
-                {
-                    method: "PUT",
+            let response;
+
+            if (!cart?.cartId) {
+                response = await fetch(`${API.cart}/create`, {
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`
@@ -168,34 +289,46 @@ function Products() {
                     body: JSON.stringify({
                         products: updatedProducts
                     })
-                }
+                });
+            } else {
+                response = await fetch(
+                    `${API.cart}/${cart.cartId}`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            products: updatedProducts
+                        })
+                    }
+                );
+            }
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(
+                    data.message || "Failed to add product to cart."
+                );
+            }
+
+            await fetchCart();
+
+            if (existingProduct) {
+                toast.success("Product quantity increased.");
+            } else {
+                toast.success("Product added to cart.");
+            }
+        } catch (error) {
+            console.error("Add to cart error:", error);
+
+            toast.error(
+                error.message || "Failed to add product to cart."
             );
         }
-
-        const data = await response.json();
-
-        if (!response.ok || !data.success) {
-            throw new Error(
-                data.message || "Failed to add product to cart."
-            );
-        }
-
-        await fetchCart();
-
-        if (existingProduct) {
-            toast.success("Product quantity increased.");
-        } else {
-            toast.success("Product added to cart.");
-        }
-
-    } catch (error) {
-        console.error("Add to cart error:", error);
-
-        toast.error(
-            error.message || "Failed to add product to cart."
-        );
-    }
-};
+    };
 
     if (loading) {
         return (
@@ -260,7 +393,6 @@ function Products() {
                         Try Again
                     </button>
                 </section>
-                
             )}
 
             {!error && filteredProducts.length === 0 && (
@@ -280,6 +412,7 @@ function Products() {
                         const discount = Number(product.discount || 0);
                         const finalPrice = getDiscountedPrice(product);
                         const stock = Number(product.quantity || 0);
+                        const productImage = getProductImage(product.name);
 
                         return (
                             <article
@@ -288,9 +421,16 @@ function Products() {
                             >
 
                                 <div className="product-image">
-                                    <span>
-                                        MATERIAL
-                                    </span>
+                                    {productImage ? (
+                                        <img
+                                            src={productImage}
+                                            alt={product.name}
+                                        />
+                                    ) : (
+                                        <span>
+                                            MATERIAL
+                                        </span>
+                                    )}
                                 </div>
 
                                 <div className="product-content">
@@ -408,4 +548,5 @@ function Products() {
         </main>
     );
 }
+
 export default Products;
