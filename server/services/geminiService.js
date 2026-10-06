@@ -6,81 +6,172 @@ const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_KEY
 });
 
-// Strict JSON schema so Gemini can only respond with numbers we can trust,
-// no prose, no markdown fences, no missing fields.
 const ESTIMATE_SCHEMA = {
     type: "object",
     properties: {
         cement: {
             type: "number",
-            description: "Estimated cement required, in 50kg bags"
+            description: "Estimated cement required in 50kg bags"
         },
         sand: {
             type: "number",
-            description: "Estimated sand required, in cubic feet"
+            description: "Estimated sand required in cubic feet"
         },
         steel: {
             type: "number",
-            description: "Estimated steel/reinforcement required, in kg"
+            description: "Estimated reinforcement steel required in kg"
         },
         estimatedCost: {
             type: "number",
-            description: "Total estimated material cost in INR"
+            description: "Estimated construction material cost in INR"
         },
         notes: {
             type: "string",
-            description: "One short sentence on assumptions made (rates used, structure type, etc.)"
+            description: "Short explanation of assumptions and any input warning"
         }
     },
-    required: ["cement", "sand", "steel", "estimatedCost"]
+    required: [
+        "cement",
+        "sand",
+        "steel",
+        "estimatedCost"
+    ]
 };
 
-const buildPrompt = ({ length, width, height, floors, buildingType }) => `
-You are a construction material estimation assistant for a platform called BuildFlow.
-Estimate the construction materials required and their approximate cost in Indian
-Rupees (INR) for the structure described below, based on standard Indian RCC-framed
-construction thumb rules.
+const buildPrompt = ({
+    length,
+    width,
+    height,
+    floors,
+    buildingType
+}) => `
+You are a construction estimation assistant for BuildFlow, an Indian construction-material platform.
 
-Building details:
+Your task is to generate a realistic PRELIMINARY MATERIAL ESTIMATE.
+
+BUILDING DETAILS:
 - Length: ${length} ft
 - Width: ${width} ft
 - Height: ${height} ft
 - Floors: ${floors}
 - Building type: ${buildingType}
 
-Guidance:
-- Compute built-up area as length x width x floors (sq. ft).
-- Use realistic Indian residential/commercial construction thumb rules, roughly:
-  ~0.4 bags of cement, ~1.5 cubic ft of sand, and ~4-5 kg of steel per sq. ft of
-  built-up area, scaled sensibly for the given height and building type.
-- Estimate total material cost using approximate current Indian market rates
-  (cement ~INR 400/bag, sand ~INR 60/cft, steel ~INR 65/kg), plus a reasonable
-  allowance for other materials such as bricks and aggregate.
-- Round cement, sand, and steel to whole numbers and cost to the nearest 100 INR.
-- Respond with realistic numbers only - do not include any commentary outside the
-  JSON fields.
+CALCULATION RULES:
+
+1. Calculate the footprint:
+   footprint = length × width
+
+2. Calculate total built-up area:
+   builtUpArea = length × width × floors
+
+3. Do NOT calculate material quantities by multiplying the entire building volume
+   (length × width × height) by material coefficients.
+
+4. Height should only be used to identify unusual inputs or provide a warning.
+   Do not automatically increase material quantities because of height.
+
+5. For a normal RCC-framed residential building, use these approximate
+   preliminary thumb-rule ranges per square foot of total built-up area:
+
+   Cement:
+   approximately 0.35 to 0.45 bags per sq.ft.
+
+   Sand:
+   approximately 1.2 to 1.6 cubic feet per sq.ft.
+
+   Steel:
+   approximately 3.5 to 4.5 kg per sq.ft.
+
+6. Select reasonable values within these ranges based on the building type.
+   Do not deliberately choose the highest value unless the building type
+   reasonably requires it.
+
+7. Calculate the quantities using:
+   cement = built-up area × cement rate
+   sand = built-up area × sand rate
+   steel = built-up area × steel rate
+
+8. Round cement, sand and steel to whole numbers.
+
+9. Estimate MATERIAL COST only.
+
+Use these approximate reference rates:
+- Cement: INR 400 per 50kg bag
+- Sand: INR 60 per cubic foot
+- Steel: INR 65 per kg
+
+10. Calculate the base material cost from the estimated cement, sand and steel.
+
+11. Add a reasonable allowance of approximately 15% to 25% for other major
+    construction materials such as bricks/blocks, aggregate and related
+    material requirements.
+
+12. Do NOT include labour cost, contractor profit, land cost, furniture,
+    appliances, electrical installation or plumbing labour.
+
+13. Do NOT artificially inflate the estimated cost.
+
+14. The final estimatedCost must be mathematically consistent with the
+    estimated material quantities and the rates above.
+
+15. If the dimensions appear unusual, mention the issue in "notes".
+    For example, a very large length or an unusually high height for a
+    single-floor building should generate a warning asking the user to
+    verify the dimensions.
+
+16. The estimate is approximate and should not be presented as an exact
+    construction quotation.
+
+IMPORTANT:
+Return ONLY valid JSON matching the provided schema.
+Do not return markdown.
+Do not return code fences.
+Do not return any text outside the JSON.
+
+Return:
+{
+    "cement": number,
+    "sand": number,
+    "steel": number,
+    "estimatedCost": number,
+    "notes": "short explanation"
+}
 `;
 
-/**
- * Calls Gemini to estimate material quantities and cost from building
- * dimensions. Returns { cement, sand, steel, estimatedCost, notes }.
- */
-const estimateMaterials = async ({ length, width, height, floors = 1, buildingType = "residential" }) => {
-    if (length <= 0 || width <= 0 || height <= 0) {
-        throw new Error("length, width and height must be positive numbers");
+const estimateMaterials = async ({
+    length,
+    width,
+    height,
+    floors = 1,
+    buildingType = "residential"
+}) => {
+    if (
+        length <= 0 ||
+        width <= 0 ||
+        height <= 0 ||
+        floors <= 0
+    ) {
+        throw new Error(
+            "length, width, height and floors must be positive numbers"
+        );
     }
 
-    const client = ai;
-
     let response;
+
     try {
-        response = await client.models.generateContent({
+        response = await ai.models.generateContent({
             model: MODEL,
-            contents: buildPrompt({ length, width, height, floors, buildingType }),
+            contents: buildPrompt({
+                length,
+                width,
+                height,
+                floors,
+                buildingType
+            }),
             config: {
                 responseMimeType: "application/json",
                 responseSchema: ESTIMATE_SCHEMA,
-                temperature: 0.2 //for randomness, but we want a deterministic response so keep it low
+                temperature: 0.1
             }
         });
     } catch (error) {
@@ -88,15 +179,29 @@ const estimateMaterials = async ({ length, width, height, floors = 1, buildingTy
     }
 
     let parsed;
+
     try {
         parsed = JSON.parse(response.text);
     } catch (error) {
-        throw new Error("Gemini returned a response that could not be parsed as JSON");
+        throw new Error(
+            "Gemini returned a response that could not be parsed as JSON"
+        );
     }
 
-    for (const key of ["cement", "sand", "steel", "estimatedCost"]) {
-        if (typeof parsed[key] !== "number" || Number.isNaN(parsed[key]) || parsed[key] < 0) {
-            throw new Error(`Gemini returned an invalid value for "${key}"`);
+    for (const key of [
+        "cement",
+        "sand",
+        "steel",
+        "estimatedCost"
+    ]) {
+        if (
+            typeof parsed[key] !== "number" ||
+            Number.isNaN(parsed[key]) ||
+            parsed[key] < 0
+        ) {
+            throw new Error(
+                `Gemini returned an invalid value for "${key}"`
+            );
         }
     }
 
@@ -109,4 +214,6 @@ const estimateMaterials = async ({ length, width, height, floors = 1, buildingTy
     };
 };
 
-module.exports = { estimateMaterials };
+module.exports = {
+    estimateMaterials
+};
